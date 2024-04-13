@@ -3,10 +3,20 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
+
+fn sort<T>(array: &mut [T])
+where T:PartialOrd+Copy{
 	//TODO
+    let mut max_index = array.len();
+    while max_index>0 {
+        for i in 1..max_index{
+            if array[i] < array[i-1]{
+                (array[i-1],array[i]) = (array[i],array[i-1])
+            }
+        }
+        max_index -= 1;
+    }
 }
 #[cfg(test)]
 mod tests {

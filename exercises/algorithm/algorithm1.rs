@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -70,12 +70,54 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where T:PartialOrd+Copy,
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let list  = if list_a.length == 0 && list_b.length == 0{
+            Err(LinkedList::<T>::new())
+        }else if list_a.length == 0{
+            Err(list_b)
+        }else if list_b.length == 0{
+            Err(list_a)
+        }else{
+            Ok((list_a,list_b))
+        }
+        .and_then(|(mut list_a,mut list_b)|{
+            let mut list = LinkedList::<T>::new();
+            let list_a_length = list_a.length;
+            let list_b_length = list_b.length;
+            let mut a_index = 0;
+            let mut b_index = 0;
+            loop {
+                let a_val = list_a.get(a_index);
+                let b_val = list_b.get(b_index);
+                match (a_val,b_val) {
+                    (None,None)=>break,
+                    (Some(a_val),None)=>{
+                        list.add(*a_val);
+                        a_index+=1;
+                    },
+                    (None,Some(b_val))=>{
+                        list.add(*b_val);
+                        b_index+=1;
+                    }
+                    (Some(a_val),Some(b_val))=>{
+                        if *a_val < *b_val{
+                            list.add(*a_val);
+                            a_index+=1;
+                        }else {
+                            list.add(*b_val);
+                            b_index+=1;
+                        }
+                    }
+                }
+            }
+            Ok(list)
+        });
+        
+        
+		match list {
+            Ok(list)=>list,
+            Err(list)=>list
         }
 	}
 }
